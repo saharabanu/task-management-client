@@ -1,4 +1,4 @@
-
+import Header from '@/components/ui/Header'
 import './globals.css'
 
 
@@ -11,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+      <header className="fixed top-0 left-0 text-center w-full header bg-black py-4 text-white font-bold text-lg shadow-lg">
+      <Header/>
+      </header>
+      {children}
+      </body>
     </html>
   )
 }

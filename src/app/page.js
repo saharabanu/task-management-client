@@ -1,9 +1,11 @@
 
 
-export default function Home() {
+
+export default function HomePage() {
   return (
-    <main>
-         <h2 className="bg-green-500">Hello</h2>
-    </main>
+    <div className="pt-36 ">
+   
+    
+    </div>
   )
 }
