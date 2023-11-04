@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
+import Link from "next/link";
 import Swal from "sweetalert2";
 
 const TaskList = () => {
@@ -17,23 +18,19 @@ const TaskList = () => {
 
   const deleteFunc = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You will delete this task!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteTask(id)
-        Swal.fire(
-          'Deleted!',
-          'This task has been deleted.',
-          'success'
-        )
+        deleteTask(id);
+        Swal.fire("Deleted!", "This task has been deleted.", "success");
       }
-    })
+    });
   };
 
   return (
@@ -59,8 +56,12 @@ const TaskList = () => {
                 <td className="pl-5">{item?.status}</td>
 
                 <td className="pl-5">
-                  <button className="">Edit</button>
-                  <button className="px-3" onClick={() =>deleteFunc(item?.id)}>delete</button>
+                  <Link href={`/edit/${item?.id}`}>
+                    <button className="">Edit</button>
+                  </Link>
+                  <button className="px-3" onClick={() => deleteFunc(item?.id)}>
+                    delete
+                  </button>
                 </td>
               </tr>
             ))}

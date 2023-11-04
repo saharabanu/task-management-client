@@ -11,6 +11,15 @@ export const apiSlice = createApi({
   tagTypes: ["tasks", 'task'],
   endpoints: (builder) => ({
 
+    // single task
+    getSingleTask: builder.query({
+      query: (id) => ({
+        url: `${TASKS}/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["tasks"],
+    }),
+
     // create task 
 
     createTask: builder.mutation({
@@ -19,8 +28,21 @@ export const apiSlice = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["task"],
+      invalidatesTags: ["tasks"],
     }),
+
+    // update task
+ 
+ updateTask: builder.mutation({
+  query: (data) => ({
+    url: `${TASKS}/${data.id}`,
+    method: "PATCH",
+    body: data.body
+  }),
+
+  invalidatesTags: ['tasks']
+}),
+
     // get all tasks
     getTasks: builder.query({
       query: () => ({
@@ -46,4 +68,4 @@ export const apiSlice = createApi({
   }),
 });
 
-export const {useCreateTaskMutation, useGetTasksQuery,  useDeleteTaskMutation } = apiSlice;
+export const { useCreateTaskMutation, useUpdateTaskMutation, useGetTasksQuery, useGetSingleTaskQuery ,useDeleteTaskMutation } = apiSlice;
