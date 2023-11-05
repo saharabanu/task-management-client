@@ -1,90 +1,80 @@
 "use client";
 
-import Error from "@/components/Error";
-import TaskLoading from "@/components/Loader/TaskLoading";
-import NoTask from "@/components/NoTask";
 import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { MdDeleteForever } from "react-icons/md";
-import { BiSolidEdit } from "react-icons/bi";
+
+import React, { useState, useEffect } from "react";
+import Pagination from "../Pagination";
+import TaskTable from "./TaskTable";
+import NoTask from "@/components/NoTask";
+import Error from "@/components/Error";
+import TaskLoading from "@/components/Loader/TaskLoading";
+import FiltersButton from "./FiltersButton";
 
 const TaskList = () => {
+  const [filter, setFilter] = useState("All");
+
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   // get all task query
   const { data, isError, isLoading } = useGetTasksQuery();
   const tasks = data?.data;
-  let serialNumber = 0;
+
+  // filter option
+
+  // Function to apply filtering
+  const applyFilter = (filterValue) => {
+    setFilter(filterValue);
+    if (filterValue === "All") {
+      // Show all tasks
+      setFilteredTasks(tasks);
+    } else {
+      // Filter tasks based on the selected criteria
+      setFilteredTasks(
+        tasks.filter((item) => {
+          if (filterValue === "Complete") {
+            return item.status === "complete";
+          } else if (filterValue === "Incomplete") {
+            return item.status !== "complete";
+          } else if (filterValue === "High") {
+            return item.priority === "high";
+          } else if (filterValue === "Low") {
+            return item.priority === "low";
+          } else if (filterValue === "Yellow") {
+            return item.priority === "medium";
+          }
+        })
+      );
+    }
+    setCurrentPage(1);
+  };
+
+  // useEffect(() => {
+  //   // Update total pages when filteredTasks change
+  //   const itemsPerPage = 5;
+  //   setTotalPages(Math.ceil(filteredTasks.length / itemsPerPage));
+  // }, [filteredTasks]);
+  useEffect(() => {
+    setFilter("All");
+  }, []);
+
+  //paginate option
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 5;
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  //  current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = filteredTasks?.slice(startIndex, endIndex);
 
   // console.log(data)
-
-  // decide what to render
-  let content = null;
-
-  if (isLoading) {
-    content = (
-      <>
-        <TaskLoading />
-        <TaskLoading />
-        <TaskLoading />
-        <TaskLoading />
-      </>
-    );
-  }
-
-  if (!isLoading && isError) {
-    content = <Error message="There was an error" />;
-  }
-
-  if (!isLoading && !isError && tasks?.length === 0) {
-    content = <NoTask message="No Task found!" />;
-  }
-
-  if (!isLoading && !isError && tasks?.length > 0) {
-    content = tasks?.map((item) => {
-      serialNumber++;
-      return (
-        <tr
-          key={item?.id}
-          className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-        >
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{serialNumber}</td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{item?.title}</td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{item?.description}</td>
-          <td
-            className={`whitespace-nowrap px-6 py-4 font-medium ${
-              item?.priority === "high"
-                ? "text-red-500"
-                : item?.priority === "low"
-                ? "text-green-500"
-                : item?.priority === "medium"
-                ? "text-yellow-500"
-                : ""
-            }`}
-          >
-            {item?.priority}
-          </td>
-          <td
-            className={`whitespace-nowrap px-6 py-4 font-medium ${
-              item?.status === "complete" ? "text-green-500" : "text-red-500"
-            }`}
-          >
-            {item?.status}
-          </td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">
-            <Link href={`/edit/${item?.id}`}>
-              <button className="font-medium">
-                <BiSolidEdit />
-              </button>
-            </Link>
-            <button className="px-3 font-8xl text-red-400" onClick={() => deleteFunc(item?.id)}>
-              <MdDeleteForever />
-            </button>
-          </td>
-          {/* <td className="whitespace-nowrap px-6 py-4">@mdo</td> */}
-        </tr>
-      );
-    });
-  }
 
   // delete task
 
@@ -111,50 +101,101 @@ const TaskList = () => {
 
   return (
     <div className=" max-w-3xl mx-auto">
-      <div className="flex justify-end items-center ">
-        <Link href="/create">
+
+{/* <FiltersButton activeFilter={filter} onFilterChange={setFilter} /> */}
+      <div className=" ">
+        <div>
           <button
             type="button"
-            className="focus:outline-none text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+            className={`focus:outline-none text-white ${
+              filter === "All"
+                ? "bg-gray-400 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300"
+                : "bg-gray-600 dark:bg-gray-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("All")}
           >
-            Add Task
+            All
           </button>
-        </Link>
+         
+          <button
+            type="button"
+            className={`focus:outline-none text-white ${
+              filter === "Complete"
+                ? "bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
+                : "bg-green-600 dark:bg-green-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("Complete")}
+          >
+            Complete
+          </button>
+          <button
+            type="button"
+            className={`focus:outline-none text-white ${
+              filter === "Incomplete"
+                ? "bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300"
+                : "bg-red-600 dark:bg-red-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("Incomplete")}
+          >
+            InComplete
+          </button>
+          <button
+            type="button"
+            className={`focus:outline-none text-white ${
+              filter === "High"
+                ? "bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300"
+                : "bg-red-600 dark:bg-red-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("High")}
+          >
+            High
+          </button>
+          <button
+            type="button"
+            className={`focus:outline-none text-white ${
+              filter === "Low"
+                ? "bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-green-300"
+                : "bg-green-600 dark:bg-green-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("Low")}
+          >
+            Low
+          </button>
+          <button
+            type="button"
+            className={`focus:outline-none text-white ${
+              filter === "Yellow"
+                ? "bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300"
+                : "bg-yellow-600 dark:bg-yellow-700"
+            } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
+            onClick={() => applyFilter("Yellow")}
+          >
+            Yellow
+          </button>
+
+          <Link href="/create">
+            <button
+              type="button"
+              className="focus:outline-none text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+            >
+              Add Task
+            </button>
+          </Link>
+        </div>
       </div>
 
-      <div className="flex flex-col">
-        <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-            <div className="overflow-hidden">
-              <table className="min-w-full text-left text-sm font-light">
-                <thead className="border-b font-medium dark:border-neutral-500">
-                  <tr>
-                    <th scope="col" className="px-6 py-4">
-                      #
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Task
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Description
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Priority
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Status
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Action
-                    </th>
-                    {/* <th scope="col" className="px-6 py-4">Handle</th> */}
-                  </tr>
-                </thead>
-                <tbody>{content}</tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+
+      
+
+      {/*  data table or task table */}
+      <TaskTable currentData={currentData} deleteFunc={deleteFunc} filteredTasks={filteredTasks} />
+      <div className="flex justify-center">
+        {/* pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );
