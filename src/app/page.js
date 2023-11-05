@@ -7,7 +7,6 @@ export default function HomePage() {
   return (
     <div className=" container mx-auto mt-36">
       <Toaster />
-      <CreateTask />
       <TaskList />
       <Footer />
     </div>

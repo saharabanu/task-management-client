@@ -5,7 +5,7 @@ const TASKS = '/tasks';
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1",
+    baseUrl: "https://task-management-server-sand.vercel.app/api/v1",
   }),
 
   tagTypes: ["tasks", 'task'],

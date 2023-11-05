@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <Provider store={store}>
       <html lang="en">
       <body>
-      <header className="fixed top-0 left-0 text-center w-full header bg-black py-4 text-white font-bold text-lg shadow-lg">
+      <header className="fixed top-0 left-0 text-center w-full header bg-blue-400 py-4 text-white font-bold text-lg shadow-lg">
       <Header/>
       </header>
       {children}
