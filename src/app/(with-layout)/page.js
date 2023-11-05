@@ -1,5 +1,5 @@
+'use client'
 import Footer from "@/components/ui/Footer";
-import CreateTask from "@/components/ui/tasks/CreateTask";
 import TaskList from "@/components/ui/tasks/TaskList";
 import { Toaster } from "react-hot-toast";
 
