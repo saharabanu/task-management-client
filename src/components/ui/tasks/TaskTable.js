@@ -2,13 +2,37 @@
 import Error from "@/components/Error";
 import TaskLoading from "@/components/Loader/TaskLoading";
 import NoTask from "@/components/NoTask";
-import { useGetTasksQuery } from "@/redux/api/apiSlice";
+import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
 import Link from "next/link";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
-const TaskTable = ({ currentData, deleteFunc, filteredTasks }) => {
+const TaskTable = ({ currentData, filteredTasks }) => {
   const { isError, isLoading } = useGetTasksQuery();
+  const [deleteTask] = useDeleteTaskMutation();
+
+  const deleteFunc = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will delete this task!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+  
+      if (result.isConfirmed) {
+        await deleteTask(id);
+        Swal.fire("Deleted!", "This task has been deleted.", "success");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      // You can handle the error, show a message, or perform other error handling here.
+    }
+  };
   let serialNumber = 0;
 
   // decide what to render
@@ -79,6 +103,10 @@ const TaskTable = ({ currentData, deleteFunc, filteredTasks }) => {
       );
     });
   }
+
+
+ 
+
 
   return (
     <>

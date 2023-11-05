@@ -1,66 +1,62 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "./baseApi";
 
 
 const TASKS = '/tasks';
-export const apiSlice = createApi({
-  reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://task-management-server-sand.vercel.app/api/v1",
-  }),
-
-  tagTypes: ["tasks", 'task'],
-  endpoints: (builder) => ({
+export const apiSlice = baseApi.injectEndpoints({
+  
+  endpoints: (build) => ({
 
     // single task
-    getSingleTask: builder.query({
+    getSingleTask: build.query({
       query: (id) => ({
         url: `${TASKS}/${id}`,
         method: "GET",
       }),
-      providesTags: ["tasks"],
+      providesTags: ['task'],
     }),
 
     // create task 
 
-    createTask: builder.mutation({
+    createTask: build.mutation({
       query: (data) => ({
         url: TASKS,
         method: "POST",
-        body: data,
+         data,
       }),
-      invalidatesTags: ["tasks"],
+      invalidatesTags: ['task'],
     }),
 
     // update task
  
- updateTask: builder.mutation({
-  query: (data) => ({
-    url: `${TASKS}/${data.id}`,
+ updateTask: build.mutation({
+  query: ({id, ...task}) => ({
+    url: `${TASKS}/${id}`,
     method: "PATCH",
-    body: data.body
+    data: task
   }),
 
-  invalidatesTags: ['tasks']
+  invalidatesTags:['task']
 }),
 
     // get all tasks
-    getTasks: builder.query({
+    getTasks: build.query({
       query: () => ({
         url: TASKS,
       }),
-      providesTags: ["tasks"],
+      providesTags: ['task'],
     }),
 
     
 
     // delete task
 
-    deleteTask: builder.mutation({
+    deleteTask: build.mutation({
         query: (id) => ({
           url: `${TASKS}/${id}`,
           method: "DELETE",
         }),
-        invalidatesTags: ["tasks"],
+        invalidatesTags: ['task'],
       }),
 
 

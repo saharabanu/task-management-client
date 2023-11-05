@@ -1,5 +1,6 @@
+import { getFromLocalStorage } from "@/utils/local-storage";
 import axios from "axios";
-import { getFromLocalStorage } from "../../utils/local-storage";
+
 
 const instance = axios.create();
 instance.defaults.headers.post["Content-Type"] = "application/json";

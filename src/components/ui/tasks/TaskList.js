@@ -1,6 +1,5 @@
 "use client";
 
-import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
 import Link from "next/link";
 import Swal from "sweetalert2";
 
@@ -11,6 +10,8 @@ import NoTask from "@/components/NoTask";
 import Error from "@/components/Error";
 import TaskLoading from "@/components/Loader/TaskLoading";
 import FiltersButton from "./FiltersButton";
+import { list } from "postcss";
+import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
 
 const TaskList = () => {
   const [filter, setFilter] = useState("All");
@@ -19,7 +20,8 @@ const TaskList = () => {
   const [totalPages, setTotalPages] = useState(1);
   // get all task query
   const { data, isError, isLoading } = useGetTasksQuery();
-  const tasks = data?.data;
+ 
+  
 
   // filter option
 
@@ -28,11 +30,11 @@ const TaskList = () => {
     setFilter(filterValue);
     if (filterValue === "All") {
       // Show all tasks
-      setFilteredTasks(tasks);
+      setFilteredTasks(data);
     } else {
       // Filter tasks based on the selected criteria
       setFilteredTasks(
-        tasks.filter((item) => {
+        data?.filter((item) => {
           if (filterValue === "Complete") {
             return item.status === "complete";
           } else if (filterValue === "Incomplete") {
@@ -50,14 +52,14 @@ const TaskList = () => {
     setCurrentPage(1);
   };
 
-  // useEffect(() => {
-  //   // Update total pages when filteredTasks change
-  //   const itemsPerPage = 5;
-  //   setTotalPages(Math.ceil(filteredTasks.length / itemsPerPage));
-  // }, [filteredTasks]);
   useEffect(() => {
-    setFilter("All");
-  }, []);
+    // Update total pages when filteredTasks change
+    const itemsPerPage = 5;
+    setTotalPages(Math.ceil(filteredTasks?.length / itemsPerPage));
+  }, [filteredTasks]);
+  // useEffect(() => {
+  //   setFilter("All");
+  // }, []);
 
   //paginate option
 
@@ -78,29 +80,31 @@ const TaskList = () => {
 
   // delete task
 
-  const [deleteTask] = useDeleteTaskMutation();
+ 
 
   // delete function
 
-  const deleteFunc = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You will delete this task!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteTask(id);
-        Swal.fire("Deleted!", "This task has been deleted.", "success");
-      }
-    });
-  };
+  // const deleteFunc = (id) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You will delete this task!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       deleteTask(id);
+  //       Swal.fire("Deleted!", "This task has been deleted.", "success");
+  //     }
+  //   });
+  // };
+  
 
   return (
     <div className=" max-w-3xl mx-auto">
+    
 
 {/* <FiltersButton activeFilter={filter} onFilterChange={setFilter} /> */}
       <div className=" ">
@@ -170,7 +174,7 @@ const TaskList = () => {
             } font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2`}
             onClick={() => applyFilter("Yellow")}
           >
-            Yellow
+            Medium
           </button>
 
           <Link href="/create">
@@ -188,7 +192,7 @@ const TaskList = () => {
       
 
       {/*  data table or task table */}
-      <TaskTable currentData={currentData} deleteFunc={deleteFunc} filteredTasks={filteredTasks} />
+      <TaskTable currentData={currentData}  filteredTasks={filteredTasks} />
       <div className="flex justify-center">
         {/* pagination */}
         <Pagination
