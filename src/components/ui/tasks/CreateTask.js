@@ -1,17 +1,20 @@
 "use client";
 import { useCreateTaskMutation } from "@/redux/api/apiSlice";
+import { getUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const CreateTask = () => {
   const router = useRouter();
+  const {email:userEmail} = getUserInfo();
   const { register, handleSubmit, reset } = useForm();
   const [createTask] = useCreateTaskMutation();
 
   const onSubmit = async (data) => {
     try {
       const formData = {
+        email:userEmail,
         title: data?.title,
         description: data?.description,
         priority: data?.priority,
@@ -29,9 +32,20 @@ const CreateTask = () => {
   };
   return (
     <>
-     <div className="flex justify-center items-center">
+     <div className="m-auto max-w-4xl">
       <div className="block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 mt-36">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="relative mb-6" data-te-input-wrapper-init>
+            <input
+              {...register("email")}
+              name="email"
+              value={userEmail}
+              className="peer block min-h-[auto] w-full rounded border-0 bg-gray-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+              id="exampleInput7"
+              placeholder="Name"
+            />
+           
+          </div>
           <div className="relative mb-6" data-te-input-wrapper-init>
             <input
               {...register("title")}

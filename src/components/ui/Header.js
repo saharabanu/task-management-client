@@ -13,8 +13,7 @@ const Header = () => {
   
   const router = useRouter();
     const {email} = getUserInfo();
-   console.log(email)
-  console.log(userLoggedIn,  'from header')
+  
 
   const logout = () => {
     removeUserInfo(authKey);

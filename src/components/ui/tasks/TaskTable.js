@@ -8,7 +8,7 @@ import { BiSolidEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 
-const TaskTable = ({ currentData, filteredTasks }) => {
+const TaskTable = ( {filteredTasks }) => {
   const { isError, isLoading } = useGetTasksQuery();
   const [deleteTask] = useDeleteTaskMutation();
 
@@ -58,7 +58,7 @@ const TaskTable = ({ currentData, filteredTasks }) => {
   }
 
   if (!isLoading && !isError && filteredTasks?.length > 0) {
-    content = currentData?.map((item) => {
+    content = filteredTasks?.map((item) => {
       serialNumber++;
       return (
         <tr

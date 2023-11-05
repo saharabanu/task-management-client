@@ -2,6 +2,7 @@
 
 import { useGetSingleTaskQuery, useUpdateTaskMutation } from "@/redux/api/apiSlice";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -9,12 +10,20 @@ const EditPage = ({ params }) => {
   const router = useRouter();
   const { id } = params;
 
-  const { register, handleSubmit, reset, control } = useForm();
+  const { register, handleSubmit,  setValue } = useForm();
   const { data } = useGetSingleTaskQuery(id);
-  // console.log(data)
-  const [updateTask] = useUpdateTaskMutation();
 
-  //  console.log(data?.data, data?.data?.title, 'from single api')
+  const [updateTask] = useUpdateTaskMutation();
+  useEffect(() => {
+    if (data) {
+      setValue("title", data?.title);
+      setValue("description", data?.description);
+      setValue("priority", data?.priority);
+      setValue("status", data?.status || "");
+    }
+  }, [data, setValue]);
+
+  
 
   const onSubmit = async (values) => {
     try {
@@ -37,7 +46,8 @@ const EditPage = ({ params }) => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="m-auto max-w-4xl">
+   
       <div className="block max-w-lg rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 mt-36">
         <form onSubmit={handleSubmit(onSubmit)} defaultValues={defaultValues}>
           <div className="relative mb-6" data-te-input-wrapper-init>
@@ -50,18 +60,13 @@ const EditPage = ({ params }) => {
               id="exampleInput7"
               placeholder="Name"
             />}
-            {/* <label
-            for="exampleInput7"
-            className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary "
-          >
-            Task Name
-          </label> */}
+           
           </div>
 
           <div className="relative mb-6" data-te-input-wrapper-init>
            {data?.description &&  <textarea
               {...register("description")}
-              defaultValue={data?.description}
+             
               required
               name="description"
               className="peer block min-h-[auto] w-full rounded border-0 bg-gray-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
@@ -69,12 +74,7 @@ const EditPage = ({ params }) => {
               rows="3"
               placeholder="Task Description"
             ></textarea>}
-            {/* <label
-            for="exampleFormControlTextarea13"
-            className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-          >
-            Task Description
-          </label> */}
+           
           </div>
           <div className="relative mb-6" data-te-input-wrapper-init>
            {data?.priority &&  <select
@@ -92,7 +92,8 @@ const EditPage = ({ params }) => {
           <div className="relative mb-6" data-te-input-wrapper-init>
            {data?.status &&  <select
               {...register("status")}
-              defaultValue={data?.status}
+              name="status"
+              required
               data-te-select-init
               className="peer block min-h-[auto] w-full rounded border-0 bg-gray-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
             >
@@ -110,6 +111,7 @@ const EditPage = ({ params }) => {
           />
         </form>
       </div>
+      {data?.status}
     </div>
   );
 };

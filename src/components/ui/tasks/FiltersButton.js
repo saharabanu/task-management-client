@@ -104,7 +104,7 @@ import React from 'react'
 
 
 
-
+{/* <FiltersButton activeFilter={filter} onFilterChange={setFilter} /> */}
 
 const FilterButtons = ({ activeFilter, onFilterChange }) => {
   return (
