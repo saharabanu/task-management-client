@@ -100,7 +100,7 @@ const EditPage = ({ params }) => {
                 className="peer block min-h-[auto] w-full rounded border-0 bg-gray-100 px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
               >
                 <option value="complete">Complete</option>
-                <option value="inComplete">inComplete</option>
+                <option value="inCompleted">inComplete</option>
               </select>
             )}
           </div>

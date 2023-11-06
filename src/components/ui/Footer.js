@@ -2,7 +2,7 @@
 
 const Footer = () => {
   return (
-    <div className="bg-blue-400 py-2 text-center max-w-3xl mx-auto text-white">
+    <div className="bg-blue-400 py-2 text-center max-w-4xl mx-auto text-white">
         <p>@ 2023 Copyright by Sahara Banu</p>
     </div>
   )

@@ -70,9 +70,9 @@ const TaskTable = ( {filteredTasks }) => {
           key={item?.id}
           className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
         >
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{serialNumber}</td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{item?.title}</td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">{item?.description}</td>
+          <td className="whitespace-nowrap px-3 py-4 font-medium">{serialNumber}</td>
+          <td className="whitespace-nowrap px-3 py-4 font-medium">{item?.title}</td>
+          <td className="whitespace-nowrap px-3 py-4 font-medium">{item?.description}</td>
           <td
             className={`whitespace-nowrap px-6 py-4 font-medium ${
               item?.priority === "high"
@@ -86,15 +86,18 @@ const TaskTable = ( {filteredTasks }) => {
           >
             {item?.priority}
           </td>
+          <td className="whitespace-nowrap px-3 py-4 font-medium"> {item.updatedAt ? new Date(item.updatedAt).toLocaleString() : ''}</td>
+
+         
          
           <td
-            className={`whitespace-nowrap px-6 py-4 font-medium ${
+            className={`whitespace-nowrap px-3 py-4 font-medium ${
               item?.status === "complete" ? "text-green-500" : "text-red-500"
             }`}
           >
             {item?.status}
           </td>
-          <td className="whitespace-nowrap px-6 py-4 font-medium">
+          <td className="whitespace-nowrap px-3 py-4 font-medium">
             <Link href={`/edit/${item?.id}`}>
               <button className="font-medium">
                 <BiSolidEdit className="text-blue-500 text-lg"/>
@@ -104,7 +107,7 @@ const TaskTable = ( {filteredTasks }) => {
               <MdDeleteForever className="text-red-500 text-lg"/>
             </button>
           </td>
-          {/* <td className="whitespace-nowrap px-6 py-4">@mdo</td> */}
+          
         </tr>
       );
     });
@@ -123,22 +126,26 @@ const TaskTable = ( {filteredTasks }) => {
               <table className="min-w-full text-left text-sm font-light">
                 <thead className="border-b font-medium dark:border-neutral-500">
                   <tr>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
                       #
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
                       Task
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
                       Description
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
                       Priority
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
+                      Date & Time
+                    </th>
+                   
+                    <th scope="col" className="px-3 py-4">
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-4">
+                    <th scope="col" className="px-3 py-4">
                       Action
                     </th>
                   </tr>
