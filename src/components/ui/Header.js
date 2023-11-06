@@ -17,14 +17,18 @@ const Header = () => {
 
   const logout = () => {
     removeUserInfo(authKey);
-    router.push("/register");
+    router.push("/login");
   };
   return (
     <div className="flex justify-around items-center">
-          <Link href="/"><h2> Task Management Application</h2></Link>
+         <div>
+         <Link href="/"><h2> Task Management Application</h2></Link>
+         </div>
           
 
-          {userLoggedIn ?<>  <button onClick={logout}>logout</button> <p>{email}</p> </> :  <Link href="/login"><button> Login</button></Link>}
+          <div>
+          {userLoggedIn ?<div className='flex '>  <button onClick={logout}>logout</button> <p className='pl-3'>{email}</p> </div> :  <Link href="/login"><button> Login</button></Link>}
+          </div>
           
           
         </div>

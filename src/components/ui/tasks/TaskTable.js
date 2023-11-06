@@ -4,6 +4,9 @@ import TaskLoading from "@/components/Loader/TaskLoading";
 import NoTask from "@/components/NoTask";
 import { useDeleteTaskMutation, useGetTasksQuery } from "@/redux/api/apiSlice";
 import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -11,7 +14,9 @@ import Swal from "sweetalert2";
 const TaskTable = ( {filteredTasks }) => {
   const { isError, isLoading } = useGetTasksQuery();
   const [deleteTask] = useDeleteTaskMutation();
+  
 
+  
   const deleteFunc = async (id) => {
     try {
       const result = await Swal.fire({
@@ -29,8 +34,8 @@ const TaskTable = ( {filteredTasks }) => {
         Swal.fire("Deleted!", "This task has been deleted.", "success");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
-      // You can handle the error, show a message, or perform other error handling here.
+      toast.error("An error occurred:", error);
+      
     }
   };
   let serialNumber = 0;
@@ -81,6 +86,7 @@ const TaskTable = ( {filteredTasks }) => {
           >
             {item?.priority}
           </td>
+         
           <td
             className={`whitespace-nowrap px-6 py-4 font-medium ${
               item?.status === "complete" ? "text-green-500" : "text-red-500"
@@ -91,11 +97,11 @@ const TaskTable = ( {filteredTasks }) => {
           <td className="whitespace-nowrap px-6 py-4 font-medium">
             <Link href={`/edit/${item?.id}`}>
               <button className="font-medium">
-                <BiSolidEdit />
+                <BiSolidEdit className="text-blue-500 text-lg"/>
               </button>
             </Link>
             <button className="px-3 font-8xl text-red-400" onClick={() => deleteFunc(item?.id)}>
-              <MdDeleteForever />
+              <MdDeleteForever className="text-red-500 text-lg"/>
             </button>
           </td>
           {/* <td className="whitespace-nowrap px-6 py-4">@mdo</td> */}
