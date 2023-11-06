@@ -9,18 +9,27 @@ import { getUserInfo } from "@/services/auth.service";
 import Pagination from "../Pagination";
 import Link from "next/link";
 import TaskFilter from "./TaskFilter";
+import { useDebounced } from "@/redux/hooks";
 
 const TaskList = () => {
   const { data } = useGetTasksQuery();
-  console.log(data);
+  // console.log(data);
   const { email } = getUserInfo();
   const [filteredTasks, setFilteredTasks] = useState([]);
   //for pagination
   const [currentPage, setCurrentPage] = useState(1);
   // for filtering
-  const [statusFilter, setStatusFilter] = useState(""); // Filter by status
-  const [priorityFilter, setPriorityFilter] = useState(""); // Filter by priority
+  const [statusFilter, setStatusFilter] = useState(""); 
+  const [priorityFilter, setPriorityFilter] = useState(""); 
   const [sortOrder, setSortOrder] = useState("asc");
+  // for searching
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // use debounced
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useDebounced({
+    searchQuery,
+    delay: 500, 
+  });
 
   const tasksPerPage = 5;
   useEffect(() => {
@@ -37,24 +46,25 @@ const TaskList = () => {
         filteredData = filteredData.filter((item) => item.priority === priorityFilter);
       }
 
-      // Sort the data
-      // if (sortOrder === "asc") {
-      //   filteredData.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
-      // } else {
-      //   filteredData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      // }
       if (sortOrder === "asc") {
         filteredData.sort((a, b) => Date.parse(a.updatedAt) - Date.parse(b.updatedAt));
       } else {
         filteredData.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
       }
+      if (debouncedSearchQuery) {
+        filteredData = filteredData.filter((item) =>
+          item.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        );
+      }
 
       setFilteredTasks(filteredData);
     }
-  }, [data, email, statusFilter, priorityFilter, sortOrder]);
+  }, [data, email, statusFilter, priorityFilter, sortOrder, debouncedSearchQuery]);
 
   const totalTasks = filteredTasks?.length;
   const totalPages = Math.ceil(totalTasks / tasksPerPage);
+
+  
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -67,6 +77,7 @@ const TaskList = () => {
   const resetFilters = () => {
     setStatusFilter("");
     setPriorityFilter("");
+    setSearchQuery("");
   };
 
   return (
@@ -80,6 +91,8 @@ const TaskList = () => {
         sortOrder={sortOrder}
         setSortOrder={setSortOrder}
         resetFilters={resetFilters}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
 
       <hr />

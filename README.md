@@ -3,13 +3,23 @@
 ### Live Link: https://task-management-client-one.vercel.app
 
 # Task Management Application with NextJs
- This is a task management application. I have created it using React Framework(NextJS), I have also added Tailwind CSS framework in this application. I have also integrated some tools like React Hook form for form validation, react-hot-toast and SweetAlert for notification and popup.
- At first you have to Login, because Only authenticated user can access his/her task. He can create, read and delete his task. If he wants to modify his task, he can  also edit  it. He can also filter his task using status and priority. He can also sort his task by date and time. I have also implemented pagination. 5 tasks will contain in every page. And if he wants, he can search for a specific task by its title.
+ This is a task management application. I have created it using React Framework(NextJS) App Router, I have also added Tailwind CSS framework in this application. I have also integrated some tools like React Hook form for form validation, react-hot-toast and SweetAlert for notification and popup.
+ At first you have to Login, because Only authenticated user can access his/her task. He can create, read and delete his task. If he wants to modify his task, he can  also edit  it. He can also filter his task using status and priority. He can also sort his task by date and time. I have also implemented pagination. 5 tasks will contain in every page. And if he wants, he can search for a specific task by its title.I have used useDebounced functionality for searching.
 
- When I create this application,I have fetched some issues. i could't get the access token, It solve it using jwt-decode.And also Navbar does not update automatically, if I don't give hard reload.It is a nextJs issue. I can't solve it right now.
+ When I create this application,I have fetched some issues. i could't get the access token, It solve it using jwt-decode.And also Navbar does not load automatically, if I don't give hard reload.It is a nextJs issue. I can't solve it right now. Please, consider it.
 
 
+### Some Login user data
+```
+email:  sahara@gmail.com
+password: 123456
 
+
+```
+```
+email: abc@gmail.com
+password: 123456
+```
 
 ## Getting Started
 
